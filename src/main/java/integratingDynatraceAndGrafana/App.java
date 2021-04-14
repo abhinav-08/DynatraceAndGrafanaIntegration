@@ -65,13 +65,10 @@ public class App
 		System.out.println("hi\n"+timeAndValue[0]+"\n"+timeAndValue[1]);
 		
 		//creating a connection to the database
-		InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:8086/", "Abhinav", "1234");
 		
 		DatabaseOperations db =new DatabaseOperations();
 		db.getConnected("http://localhost:8086/", "Abhinav", "1234");
-		db.addCpuUsageToDataBase(Double.parseDouble(timeAndValue[1]));
-		influxDB.close();
-		
+		db.addCpuUsageToDataBase(Double.parseDouble(timeAndValue[1]));		
 		
 		   	}
 
