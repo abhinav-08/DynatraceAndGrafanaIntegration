@@ -51,7 +51,7 @@ public class DatabaseOperations {
 		// Write them to InfluxDB
 		influxDB.write(batchPoints);
 		
-		System.out.println("Done");
+		System.out.println("Data added to the database - "+cpuUsage);
 		
 		
 //	Point point = Point.measurement("cpu_usage")
@@ -70,13 +70,27 @@ public class DatabaseOperations {
 	public void cleanWholeMeasurement(String measurement, String database) {
 		Query query = new Query("DROP SERIES from "+measurement, database);
 		this.influxDB.query(query);
+		System.out.println("\n\n --------------------------\nlimit reached \n -----cleaning database------\n\n----------------");
 	}
 	
-	public void getTotalNoOfRecords(String measurement, String database) {
-		Query query = new Query("Select count(\"usage\") from cpu_usage", "dyna_integration");
+	public double getTotalNoOfRecords() {
+		Query query = new Query("Select count(Usage) from cpu_usage", "Dynatrace_integration");
 		QueryResult qr = influxDB.query(query);
-		System.out.println(qr);
+		double records = 0;
+		
+		for (QueryResult.Result result : qr.getResults()) {
+
+			// print details of the entire result
+//			System.out.println(result.toString());
+
+			// iterate the series within the result
+			for (QueryResult.Series series : result.getSeries()) {
+				records = Double.parseDouble(series.getValues().get(0).get(1).toString());
+			}	
+	}
+		return records;
+	
 	}
 	
-	
+
 }
